@@ -8,15 +8,19 @@ def tcp_server():
     serverSocket.bind(('', serverPort))
     serverSocket.listen(1)
     print("The server is ready to receive.")
-    while True:
-        connectionSocket, addr = serverSocket.accept()
-        request = connectionSocket.recv(1024).decode()
-        (code, answer) = check_compute(request)
-        result = f'{request[:-1]} -> {code} {answer}'
-        print(result)
-        code_ans = f'{code} {answer}'
-        connectionSocket.send(code_ans.encode())
+    try: 
+        while True:
+                connectionSocket, addr = serverSocket.accept()
+                request = connectionSocket.recv(1024).decode()
+                (code, answer) = check_compute(request)
+                result = f'{request[:-1]} -> {code} {answer}'
+                print(result)
+                code_ans = f'{code} {answer}'
+                connectionSocket.send(code_ans.encode())
+                connectionSocket.close()
+    except KeyboardInterrupt:
         connectionSocket.close()
+        serverSocket.close()
 
 def check_compute(request):
     code = isValid(request)
